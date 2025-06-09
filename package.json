@@ -1,0 +1,33 @@
+{
+  "name": "inventory",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "ts-node src/app.ts",
+    "dev": "nodemon --watch src --ext ts --exec ts-node src/app.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.5.0",
+    "ejs": "^3.1.10",
+    "express": "^5.1.0",
+    "joi": "^17.13.3",
+    "method-override": "^3.0.0",
+    "pg": "^8.16.0"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.19",
+    "@types/ejs": "^3.1.5",
+    "@types/express": "^5.0.3",
+    "@types/method-override": "^3.0.0",
+    "@types/node": "^22.15.30",
+    "@types/pg": "^8.15.4",
+    "nodemon": "^3.1.10",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^5.8.3"
+  }
+}

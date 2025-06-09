@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= inventory ? 'Edit' : 'Add' %> Inventory Item</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.1/font/bootstrap-icons.min.css" rel="stylesheet">
+</head>
+
+<body class="bg-white">
+    <div class="container my-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-6 col-md-8">
+                <!-- Header -->
+                <div class="text-center mb-4">
+                    <h1 class="display-6 text-dark fw-bold">
+                        <% if (inventory) { %>
+                            <i class="bi bi-pencil-square me-2"></i>
+                            Edit Inventory Item
+                        <% } else { %>
+                            <i class="bi bi-plus-circle me-2"></i>
+                            Add New Inventory Item
+                        <% } %>
+                    </h1>
+                    <p class="text-muted mb-0">
+                        <% if (inventory) { %>
+                            Update the details of your inventory item
+                        <% } else { %>
+                            Fill in the details to add a new item
+                        <% } %>
+                    </p>
+                </div>
+
+                <!-- Form Card -->
+                <div class="card border-dark shadow-sm">
+                    <div class="card-header bg-dark text-white">
+                        <h5 class="card-title mb-0">
+                            <i class="bi bi-box-seam me-2"></i>
+                            Item Details
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <% if (inventory) { %>
+                        <form action="/inventory/<%= inventory.id %>?_method=PUT" method="POST">
+                        <% } else { %>
+                        <form action="/inventory" method="POST">
+                        <% } %>
+                            <!-- Name Field -->
+                            <div class="mb-3">
+                                <label for="name" class="form-label fw-bold text-dark">
+                                    <i class="bi bi-tag me-1"></i>
+                                    Item Name
+                                </label>
+                                <input type="text" 
+                                       class="form-control border-dark" 
+                                       id="name" 
+                                       name="name" 
+                                       value="<%= inventory ? inventory.name : '' %>" 
+                                       placeholder="Enter item name"
+                                       required>
+                            </div>
+
+                            <!-- Quantity Field -->
+                            <div class="mb-3">
+                                <label for="quantity" class="form-label fw-bold text-dark">
+                                    <i class="bi bi-box me-1"></i>
+                                    Quantity in Stock
+                                </label>
+                                <input type="number" 
+                                       class="form-control border-dark" 
+                                       id="quantity" 
+                                       name="quantity" 
+                                       value="<%= inventory ? inventory.quantity : '' %>" 
+                                       placeholder="Enter quantity"
+                                       min="0"
+                                       required>
+                            </div>
+
+                            <!-- Price Field -->
+                            <div class="mb-3">
+                                <label for="price" class="form-label fw-bold text-dark">
+                                    <i class="bi bi-currency-dollar me-1"></i>
+                                    Unit Price
+                                </label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light border-dark">$</span>
+                                    <input type="number" 
+                                           class="form-control border-dark" 
+                                           id="price" 
+                                           name="price" 
+                                           value="<%= inventory ? inventory.price : '' %>" 
+                                           placeholder="0.00"
+                                           step="0.01"
+                                           min="0"
+                                           required>
+                                </div>
+                            </div>
+
+                            <!-- Description Field -->
+                            <div class="mb-4">
+                                <label for="description" class="form-label fw-bold text-dark">
+                                    <i class="bi bi-file-text me-1"></i>
+                                    Description
+                                </label>
+                                <textarea class="form-control border-dark" 
+                                          id="description" 
+                                          name="description" 
+                                          rows="4"
+                                          placeholder="Enter item description (optional)"><%= inventory ? inventory.description : '' %></textarea>
+                            </div>
+
+                            <!-- Submit Button -->
+                            <div class="d-grid">
+                                <button type="submit" class="btn btn-dark btn-lg">
+                                    <% if (inventory) { %>
+                                        <i class="bi bi-check-circle me-2"></i>
+                                        Update Item
+                                    <% } else { %>
+                                        <i class="bi bi-plus-lg me-2"></i>
+                                        Add Item
+                                    <% } %>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Back Link -->
+                <div class="text-center mt-4">
+                    <a href="/" class="btn btn-outline-dark">
+                        <i class="bi bi-arrow-left me-2"></i>
+                        Back to Inventory List
+                    </a>
+                </div>
+
+                <!-- Additional Info Card -->
+                <div class="card border-0 mt-4">
+                    <div class="card-body text-center bg-light">
+                        <small class="text-muted">
+                            <i class="bi bi-info-circle me-1"></i>
+                            All fields marked with * are required
+                        </small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>
