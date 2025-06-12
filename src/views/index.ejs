@@ -55,11 +55,11 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <% inventories.forEach(inventory => { %>
+                                    <% inventories.forEach((inventory,index) => { %>
                                     <tr>
                                         <td class="fw-bold text-dark">
                                             <span class="badge bg-light text-dark border">
-                                                <%= inventory.id.slice(-6).toUpperCase() %>
+                                                <%= index+1 %>
                                             </span>
                                         </td>
                                         <td class="text-dark fw-medium"><%= inventory.name %></td>

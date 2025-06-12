@@ -1,20 +1,18 @@
 
-import { Request,Response } from "express";
+import { NextFunction, Request,Response } from "express";
 import InventoryService from "../services/InventoryService";
 
 class InventoryController {
     constructor(private inventoryService: InventoryService){}
 
-    createInventory = async (req: Request, res: Response): Promise<void> => {
+    createInventory = async (req: Request, res: Response, next:NextFunction): Promise<void> => {
         try {
             const inventory = await this.inventoryService.createInventory(req.body);
             
             res.redirect('/');
         } catch (error) {
             if (error instanceof Error) {
-                res.status(500).json({ message: error.message });
-            } else {
-                res.status(500).json({ message: 'An unknown error occurred' });
+                next (error)
             }
         }
     }
@@ -24,45 +22,37 @@ class InventoryController {
         res.render('form',{inventory:null})
     }
 
-    getAllInventory = async(req: Request,res: Response): Promise<void> =>{
+    getAllInventory = async(req: Request,res: Response, next: NextFunction): Promise<void> =>{
         try {
         const inventories = await this.inventoryService.getAllInventories();
         
         res.render('index',{inventories});
         } catch (error) {
             if(error instanceof Error){
-                res.status(500).json({message: error.message});
-            }else {
-                res.status(500).json({ message: 'An unknown error occurred' });
+                next(error)
             }
         }
     }
 
-    getInventory = async(req: Request,res: Response): Promise<void> =>{
+    getInventory = async(req: Request,res: Response,next: NextFunction): Promise<void> =>{
         
         try{
             const inventory = await this.inventoryService.getInventory(req.params.id);
             res.render('form',{inventory})
         }catch (error) {
             if(error instanceof Error){
-                res.status(500).json({message: error.message});
-            }else {
-                res.status(500).json({ message: 'An unknown error occurred' });
+                next(error)
             }
         }
     }
 
-
-
-    updateInventory = async (req: Request,res: Response): Promise<void> => {
+    updateInventory = async (req: Request,res: Response,next: NextFunction): Promise<void> => {
         try{
             const inventory = await this.inventoryService.updateInventory(req.params.id, req.body);
             res.redirect('/')
         }catch (error) {
             if(error instanceof Error){
-                res.status(500).json({message: error.message});
-            }else {
-                res.status(500).json({ message: 'An unknown error occurred' });
+                next(error)
             }
         }
     }

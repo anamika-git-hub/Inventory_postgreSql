@@ -5,6 +5,7 @@ import dotenv from 'dotenv';
 import cors from 'cors';
 import inventoryRoutes from './routes/InventoryRoutes'
 import createProductsTable from './data/createProductsTable';
+import { globalErrorHandler } from './middlewares/errorHandler';
 
 dotenv.config();
 const app = express();
@@ -17,7 +18,10 @@ app.use(methodOverride("_method"));
 app.use(express.json());
 app.use(express.urlencoded({extended:true}));
 
+app.use(globalErrorHandler);
+
 app.use("/", inventoryRoutes);
+
 
 createProductsTable();
 
