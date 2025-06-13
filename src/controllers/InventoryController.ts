@@ -1,74 +1,49 @@
 
 import { NextFunction, Request,Response } from "express";
 import InventoryService from "../services/InventoryService";
+import asyncHandler from "../utils/asyncHandler";
 
 class InventoryController {
     constructor(private inventoryService: InventoryService){}
 
-    createInventory = async (req: Request, res: Response, next:NextFunction): Promise<void> => {
-        try {
+    createInventory = asyncHandler(async (req: Request, res: Response, next:NextFunction): Promise<void> => {
             const inventory = await this.inventoryService.createInventory(req.body);
-            
             res.redirect('/');
-        } catch (error) {
-            if (error instanceof Error) {
-                next (error)
-            }
-        }
-    }
+    })
     
 
-    newInventory = async(req: Request,res: Response): Promise<void> =>{
+    newInventory = asyncHandler(async(req: Request,res: Response): Promise<void> =>{
         res.render('form',{inventory:null})
-    }
+    })
 
-    getAllInventory = async(req: Request,res: Response, next: NextFunction): Promise<void> =>{
-        try {
+    getAllInventory = asyncHandler( async(req: Request,res: Response, next: NextFunction): Promise<void> =>{
+
         const inventories = await this.inventoryService.getAllInventories();
         
         res.render('index',{inventories});
-        } catch (error) {
-            if(error instanceof Error){
-                next(error)
-            }
-        }
-    }
+    })
 
-    getInventory = async(req: Request,res: Response,next: NextFunction): Promise<void> =>{
+    getInventory = asyncHandler(async(req: Request,res: Response,next: NextFunction): Promise<void> =>{
         
-        try{
             const inventory = await this.inventoryService.getInventory(req.params.id);
             res.render('form',{inventory})
-        }catch (error) {
-            if(error instanceof Error){
-                next(error)
-            }
-        }
+       
     }
+)
 
-    updateInventory = async (req: Request,res: Response,next: NextFunction): Promise<void> => {
-        try{
-            const inventory = await this.inventoryService.updateInventory(req.params.id, req.body);
-            res.redirect('/')
-        }catch (error) {
-            if(error instanceof Error){
-                next(error)
-            }
-        }
-    }
+    updateInventory = asyncHandler(async(req: Request,res: Response,next: NextFunction): Promise<void> =>{
+        
+            const inventory = await this.inventoryService.getInventory(req.params.id);
+            res.render('form',{inventory})
+        
+    })
 
-    deleteInventory = async (req: Request,res: Response): Promise<void> =>{
-        try{
+    deleteInventory = asyncHandler(async (req: Request,res: Response): Promise<void> =>{
+        
             await this.inventoryService.deleteInventory(req.params.id);
             res.redirect('/');
-        }catch (error) {
-            if(error instanceof Error){
-                res.status(500).json({message: error.message});
-            }else {
-                res.status(500).json({ message: 'An unknown error occurred' });
-            }
-        }
-    }
+        
+    })
 }
 
 export default InventoryController;
