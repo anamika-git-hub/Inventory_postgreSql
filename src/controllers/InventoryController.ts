@@ -33,8 +33,8 @@ class InventoryController {
 
     updateInventory = asyncHandler(async(req: Request,res: Response,next: NextFunction): Promise<void> =>{
         
-            const inventory = await this.inventoryService.getInventory(req.params.id);
-            res.render('form',{inventory})
+         const inventory = await this.inventoryService.updateInventory(req.params.id, req.body);
+         res.redirect('/')
         
     })
 
