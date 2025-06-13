@@ -17,10 +17,13 @@ class InventoryController {
     })
 
     getAllInventory = asyncHandler( async(req: Request,res: Response, next: NextFunction): Promise<void> =>{
+        const page = parseInt(req.query.page as string) || 1;
+        const limit = parseInt(req.query.limit as string) || 5;
+        const search = (req.query.search as string) || '';
 
-        const inventories = await this.inventoryService.getAllInventories();
-        
-        res.render('index',{inventories});
+        const {inventories, totalItems} = await this.inventoryService.getAllInventories(page, limit, search);
+        const totalPages = Math.ceil(totalItems/limit);
+        res.render('index',{inventories,currentPage: page,totalPages, searchQuery: search});
     })
 
     getInventory = asyncHandler(async(req: Request,res: Response,next: NextFunction): Promise<void> =>{

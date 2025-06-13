@@ -12,12 +12,26 @@ class InventoryService {
        
     }
 
-    async getAllInventories(): Promise<InventoryResponse[]> {
-            const inventories = await pool.query("SELECT * FROM products");
-            
-            return inventories.rows.map(this.toResponseModel);
-       
-    }
+   async getAllInventories(page: number, limit: number, search: string): Promise<{ inventories: InventoryResponse[], totalItems: number }> {
+    const offset = (page - 1) * limit;
+    const searchQuery = `%${search}%`;
+
+    const inventoryData = await pool.query(
+        `SELECT * FROM products WHERE name ILIKE $1 OR description ILIKE $1 ORDER BY id LIMIT $2 OFFSET $3`,
+        [searchQuery, limit, offset]
+    );
+
+    const countData = await pool.query(
+        `SELECT COUNT(*) FROM products WHERE name ILIKE $1 OR description ILIKE $1`,
+        [searchQuery]
+    );
+
+    return {
+        inventories: inventoryData.rows.map(this.toResponseModel),
+        totalItems: parseInt(countData.rows[0].count)
+    };
+}
+
 
     async getInventory(id:string):Promise<InventoryResponse>{
             const inventory = await pool.query("SELECT * FROM products where id = $1",[id]);

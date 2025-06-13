@@ -11,7 +11,7 @@ const createProductsTable = async () => {
         )`;
 
         try {
-            pool.query(queryText);
+            await pool.query(queryText);
             console.log("Products table created if not exists");
         } catch (error) {
             console.log("Error creating products table",error)

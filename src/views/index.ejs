@@ -11,7 +11,7 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.1/font/bootstrap-icons.min.css" rel="stylesheet">
 </head>
 
-<body class="bg-white">
+<body class="bg-white user-select-none">
     <div class="container my-5">
         <!-- Header -->
         <div class="row mb-4">
@@ -36,12 +36,23 @@
             </div>
         </div>
 
+          <form method="GET" action="/" class="mb-4">
+            <div class="input-group">
+                <input type="text" class="form-control" name="search" value="<%= searchQuery %>" placeholder="Search inventory items...">
+                <button class="btn btn-dark" type="submit">
+                    <i class="bi bi-search"></i>
+                </button>
+            </div>
+        </form>
+
+
         <!-- Inventory Table -->
         <div class="row">
             <div class="col-12">
                 <div class="card border-dark">
                     
-                    <div class="card-body p-0">
+                    <div class="card-body">
+                        
                         <div class="table-responsive">
                             <table class="table table-striped table-hover mb-0">
                                 <thead class="table-dark">
@@ -55,11 +66,11 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <% inventories.forEach((inventory,index) => { %>
+                                    <% inventories.forEach((inventory) => { %>
                                     <tr>
                                         <td class="fw-bold text-dark">
                                             <span class="badge bg-light text-dark border">
-                                                <%= index+1 %>
+                                                CH<%= inventory.id*2 %>INV<%= inventory.id %>
                                             </span>
                                         </td>
                                         <td class="text-dark fw-medium"><%= inventory.name %></td>
@@ -93,9 +104,26 @@
                                 </tbody>
                             </table>
                         </div>
+                        <div id="noResults" class="text-center py-4 d-none">
+                            <i class="bi bi-search display-4 text-muted"></i>
+                            <p class="text-muted mt-2">No items found matching your search.</p>
+                        </div>
                     </div>
                 </div>
             </div>
+        </div>
+
+         <!-- Pagination -->
+          <div class="mt-2">
+            <ul class="pagination justify-content-center">
+                <% for(let i = 1; i <= totalPages; i++) { %>
+                    <li class="page-item <%= currentPage === i ? 'active' : '' %>">
+                        <a class="page-link bg-dark border-dark text-white" href="/?page=<%= i %>&search=<%= searchQuery %>">
+                            <%= i %>
+                        </a>
+                    </li>
+                <% } %>
+            </ul>
         </div>
 
         <!-- Footer -->
