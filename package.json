@@ -17,7 +17,8 @@
     "express": "^5.1.0",
     "joi": "^17.13.3",
     "method-override": "^3.0.0",
-    "pg": "^8.16.0"
+    "pg": "^8.16.0",
+    "zod": "^3.25.63"
   },
   "devDependencies": {
     "@types/cors": "^2.8.19",
