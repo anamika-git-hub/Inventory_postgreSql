@@ -1,6 +1,6 @@
-import { Request, Response, NextFunction } from 'express';
-import CustomError from '../utils/customError';
-import { ZodError } from 'zod';
+import { Request, Response, NextFunction } from "express";
+import CustomError from "../utils/customError";
+import { ZodError } from "zod";
 
 export const globalErrorHandler = (
   err: Error | CustomError | ZodError,
@@ -8,12 +8,12 @@ export const globalErrorHandler = (
   res: Response,
   next: NextFunction
 ) => {
-   if (err instanceof ZodError) {
-     res.status(400).json({
+  if (err instanceof ZodError) {
+    res.status(400).json({
       success: false,
       message: "Validation error",
       errors: err.errors.map((e) => ({
-        path: e.path.join('.'),
+        path: e.path.join("."),
         message: e.message,
       })),
     });
@@ -21,7 +21,7 @@ export const globalErrorHandler = (
   }
 
   const statusCode = (err instanceof CustomError && err.statusCode) || 500;
-  const message = err.message || 'Internal Server Error';
+  const message = err.message || "Internal Server Error";
 
   res.status(statusCode).json({
     success: false,

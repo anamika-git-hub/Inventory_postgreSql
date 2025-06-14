@@ -1,223 +1,266 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Inventory Management</title>
     <!-- Bootstrap CSS -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
     <!-- Bootstrap Icons -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.1/font/bootstrap-icons.min.css" rel="stylesheet">
-</head>
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.1/font/bootstrap-icons.min.css"
+      rel="stylesheet"
+    />
+  </head>
 
-<body class="bg-white user-select-none">
+  <body class="bg-white user-select-none">
     <div class="container my-5">
-        <!-- Header -->
-        <div class="row mb-4">
-            <div class="col-12">
-                <div class="text-center border-bottom pb-3">
-                    <h1 class="display-5 text-dark fw-bold">
-                        <i class="bi bi-box-seam me-2"></i>
-                        Inventory Management
-                    </h1>
-                    <p class="text-muted mb-0">Manage your inventory items efficiently</p>
-                </div>
-            </div>
+      <!-- Header -->
+      <div class="row mb-4">
+        <div class="col-12">
+          <div class="text-center border-bottom pb-3">
+            <h1 class="display-5 text-dark fw-bold">
+              <i class="bi bi-box-seam me-2"></i>
+              Inventory Management
+            </h1>
+            <p class="text-muted mb-0">
+              Manage your inventory items efficiently
+            </p>
+          </div>
         </div>
+      </div>
 
-         <!-- Add New Item Button and Search Bar -->
-        <div class="row mb-4 align-items-center">
-            <div class="col-md-6">
-                <a href="/inventory/new" class="btn btn-dark btn-lg">
-                    <i class="bi bi-plus-circle me-2"></i>
-                    Add New Item
+      <!-- Add New Item Button and Search Bar -->
+      <div class="row mb-4 align-items-center">
+        <div class="col-md-6">
+          <a href="/inventory/new" class="btn btn-dark btn-lg">
+            <i class="bi bi-plus-circle me-2"></i>
+            Add New Item
+          </a>
+        </div>
+        <div class="col-md-6">
+          <form method="GET" action="/" class="d-flex justify-content-end">
+            <div class="input-group" style="max-width: 300px">
+              <input
+                type="text"
+                class="form-control"
+                name="search"
+                value="<%= searchQuery %>"
+                placeholder="Search items..."
+              />
+              <button class="btn btn-dark" type="submit">
+                <i class="bi bi-search"></i>
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- Inventory Table -->
+      <div class="row">
+        <div class="col-12">
+          <div class="card border-dark">
+            <div class="card-body">
+              <div class="table-responsive">
+                <table class="table table-striped table-hover mb-0">
+                  <thead class="table-dark">
+                    <tr>
+                      <th scope="col">Inventory ID</th>
+                      <th scope="col">Name</th>
+                      <th scope="col">Description</th>
+                      <th scope="col">Unit Price</th>
+                      <th scope="col">Quantity in Stock</th>
+                      <th scope="col" class="text-center">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <% inventories.forEach((inventory) => { %>
+                    <tr>
+                      <td class="fw-bold text-dark">
+                        <span class="badge bg-light text-dark border">
+                          CH<%= inventory.id*2 %>INV<%= inventory.id %>
+                        </span>
+                      </td>
+                      <td class="text-dark fw-medium"><%= inventory.name %></td>
+                      <td class="text-muted"><%= inventory.description %></td>
+                      <td class="text-dark fw-medium">
+                        $<%= inventory.price %>
+                      </td>
+                      <td>
+                        <span class="badge bg-secondary">
+                          <%= inventory.quantity %> units
+                        </span>
+                      </td>
+                      <td class="text-center">
+                        <div class="btn-group gap-2" role="group">
+                          <a
+                            href="/inventory/<%= inventory.id %>"
+                            class="btn btn-outline-dark btn-sm"
+                          >
+                            <i class="bi bi-pencil me-1"></i>
+                            Edit
+                          </a>
+                          <button
+                            type="button"
+                            class="btn btn-outline-danger btn-sm"
+                            data-bs-toggle="modal"
+                            data-bs-target="#deleteModal"
+                            data-item-id="<%= inventory.id %>"
+                            data-item-name="<%= inventory.name %>"
+                          >
+                            <i class="bi bi-trash me-1"></i>
+                            Delete
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                    <% }) %>
+                  </tbody>
+                </table>
+              </div>
+              <div id="noResults" class="text-center py-4 d-none">
+                <i class="bi bi-search display-4 text-muted"></i>
+                <p class="text-muted mt-2">
+                  No items found matching your search.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Pagination -->
+      <div class="row mt-4">
+        <div class="col-12">
+          <nav aria-label="Inventory pagination">
+            <ul class="pagination justify-content-center">
+              <% if (currentPage > 1) { %>
+              <li class="page-item">
+                <a
+                  class="page-link text-dark"
+                  href="/?page=<%= currentPage - 1 %>&search=<%= searchQuery %>"
+                  aria-label="Previous"
+                >
+                  <i class="bi bi-chevron-left"></i>
                 </a>
-            </div>
-            <div class="col-md-6">
-                <form method="GET" action="/" class="d-flex justify-content-end">
-                    <div class="input-group" style="max-width: 300px;">
-                        <input type="text" class="form-control" name="search" value="<%= searchQuery %>" placeholder="Search items...">
-                        <button class="btn btn-dark" type="submit">
-                            <i class="bi bi-search"></i>
-                        </button>
-                    </div>
-                </form>
-            </div>
+              </li>
+              <% } else { %>
+              <li class="page-item disabled">
+                <span class="page-link">
+                  <i class="bi bi-chevron-left"></i>
+                </span>
+              </li>
+              <% } %> <% for(let i = 1; i <= totalPages; i++) { %>
+              <li class="page-item <%= currentPage === i ? 'active' : '' %>">
+                <% if (currentPage === i) { %>
+                <span class="page-link bg-dark border-dark text-white">
+                  <%= i %>
+                </span>
+                <% } else { %>
+                <a
+                  class="page-link text-dark"
+                  href="/?page=<%= i %>&search=<%= searchQuery %>"
+                >
+                  <%= i %>
+                </a>
+                <% } %>
+              </li>
+              <% } %> <% if (currentPage < totalPages) { %>
+              <li class="page-item">
+                <a
+                  class="page-link text-dark"
+                  href="/?page=<%= currentPage + 1 %>&search=<%= searchQuery %>"
+                  aria-label="Next"
+                >
+                  <i class="bi bi-chevron-right"></i>
+                </a>
+              </li>
+              <% } else { %>
+              <li class="page-item disabled">
+                <span class="page-link">
+                  <i class="bi bi-chevron-right"></i>
+                </span>
+              </li>
+              <% } %>
+            </ul>
+          </nav>
         </div>
+      </div>
 
-          
-
-
-        <!-- Inventory Table -->
-        <div class="row">
-            <div class="col-12">
-                <div class="card border-dark">
-                    
-                    <div class="card-body">
-                        
-                        <div class="table-responsive">
-                            <table class="table table-striped table-hover mb-0">
-                                <thead class="table-dark">
-                                    <tr>
-                                        <th scope="col">Inventory ID</th>
-                                        <th scope="col">Name</th>
-                                        <th scope="col">Description</th>
-                                        <th scope="col">Unit Price</th>
-                                        <th scope="col">Quantity in Stock</th>
-                                        <th scope="col" class="text-center">Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <% inventories.forEach((inventory) => { %>
-                                    <tr>
-                                        <td class="fw-bold text-dark">
-                                            <span class="badge bg-light text-dark border">
-                                                CH<%= inventory.id*2 %>INV<%= inventory.id %>
-                                            </span>
-                                        </td>
-                                        <td class="text-dark fw-medium"><%= inventory.name %></td>
-                                        <td class="text-muted"><%= inventory.description %></td>
-                                        <td class="text-dark fw-medium">$<%= inventory.price %></td>
-                                        <td>
-                                            <span class="badge bg-secondary">
-                                                <%= inventory.quantity %> units
-                                            </span>
-                                        </td>
-                                        <td class="text-center">
-                                            <div class="btn-group gap-2" role="group">
-                                                <a href="/inventory/<%= inventory.id %>" 
-                                                   class="btn btn-outline-dark btn-sm">
-                                                    <i class="bi bi-pencil me-1"></i>
-                                                    Edit
-                                                </a>
-                                                 <button type="button" 
-                                                        class="btn btn-outline-danger btn-sm" 
-                                                        data-bs-toggle="modal" 
-                                                        data-bs-target="#deleteModal"
-                                                        data-item-id="<%= inventory.id %>"
-                                                        data-item-name="<%= inventory.name %>">
-                                                    <i class="bi bi-trash me-1"></i>
-                                                    Delete
-                                                </button>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <% }) %>
-                                </tbody>
-                            </table>
-                        </div>
-                        <div id="noResults" class="text-center py-4 d-none">
-                            <i class="bi bi-search display-4 text-muted"></i>
-                            <p class="text-muted mt-2">No items found matching your search.</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
+      <!-- Footer -->
+      <div class="row mt-5">
+        <div class="col-12">
+          <div class="text-center border-top pt-3">
+            <p class="text-muted mb-0">
+              <small>Inventory Management System</small>
+            </p>
+          </div>
         </div>
-
-         <!-- Pagination -->
-        <div class="row mt-4">
-            <div class="col-12">
-                <nav aria-label="Inventory pagination">
-                    <ul class="pagination justify-content-center">
-                        <% if (currentPage > 1) { %>
-                            <li class="page-item">
-                                <a class="page-link text-dark" href="/?page=<%= currentPage - 1 %>&search=<%= searchQuery %>" aria-label="Previous">
-                                    <i class="bi bi-chevron-left"></i>
-                                </a>
-                            </li>
-                        <% } else { %>
-                            <li class="page-item disabled">
-                                <span class="page-link">
-                                    <i class="bi bi-chevron-left"></i>
-                                </span>
-                            </li>
-                        <% } %>
-                        
-                        <% for(let i = 1; i <= totalPages; i++) { %>
-                            <li class="page-item <%= currentPage === i ? 'active' : '' %>">
-                                <% if (currentPage === i) { %>
-                                    <span class="page-link bg-dark border-dark text-white">
-                                        <%= i %>
-                                    </span>
-                                <% } else { %>
-                                    <a class="page-link text-dark" href="/?page=<%= i %>&search=<%= searchQuery %>">
-                                        <%= i %>
-                                    </a>
-                                <% } %>
-                            </li>
-                        <% } %>
-                        
-                        <% if (currentPage < totalPages) { %>
-                            <li class="page-item">
-                                <a class="page-link text-dark" href="/?page=<%= currentPage + 1 %>&search=<%= searchQuery %>" aria-label="Next">
-                                    <i class="bi bi-chevron-right"></i>
-                                </a>
-                            </li>
-                        <% } else { %>
-                            <li class="page-item disabled">
-                                <span class="page-link">
-                                    <i class="bi bi-chevron-right"></i>
-                                </span>
-                            </li>
-                        <% } %>
-                    </ul>
-                </nav>
-            </div>
-        </div>
-
-        <!-- Footer -->
-        <div class="row mt-5">
-            <div class="col-12">
-                <div class="text-center border-top pt-3">
-                    <p class="text-muted mb-0">
-                        <small>Inventory Management System</small>
-                    </p>
-                </div>
-            </div>
-        </div>
+      </div>
     </div>
 
-        <!-- Delete Confirmation Modal -->
-    <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title text-dark" id="deleteModalLabel">Confirm Delete</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <p>Are you sure you want to delete "<span id="itemName"></span>"?</p>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-outline-dark" data-bs-dismiss="modal">Cancel</button>
-                    <form id="deleteForm" method="POST" class="d-inline">
-                        <button type="submit" class="btn btn-dark">Delete</button>
-                    </form>
-                </div>
-            </div>
+    <!-- Delete Confirmation Modal -->
+    <div
+      class="modal fade"
+      id="deleteModal"
+      tabindex="-1"
+      aria-labelledby="deleteModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title text-dark" id="deleteModalLabel">
+              Confirm Delete
+            </h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <p>
+              Are you sure you want to delete "<span id="itemName"></span>"?
+            </p>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-outline-dark"
+              data-bs-dismiss="modal"
+            >
+              Cancel
+            </button>
+            <form id="deleteForm" method="POST" class="d-inline">
+              <button type="submit" class="btn btn-dark">Delete</button>
+            </form>
+          </div>
         </div>
+      </div>
     </div>
 
     <!-- Bootstrap JS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
 
     <script>
-        const deleteModal = document.getElementById('deleteModal');
-        const deleteForm = document.getElementById('deleteForm');
-        const itemNameSpan = document.getElementById('itemName');
-        
-        deleteModal.addEventListener('show.bs.modal', function (event) {
-            const button = event.relatedTarget;
-            const itemId = button.getAttribute('data-item-id');
-            const itemName = button.getAttribute('data-item-name');
-            
-            deleteForm.action = `/inventory/${itemId}?_method=DELETE`;
-            
-            itemNameSpan.textContent = itemName;
-        });
-    </script>
-</body>
+      const deleteModal = document.getElementById("deleteModal");
+      const deleteForm = document.getElementById("deleteForm");
+      const itemNameSpan = document.getElementById("itemName");
 
+      deleteModal.addEventListener("show.bs.modal", function (event) {
+        const button = event.relatedTarget;
+        const itemId = button.getAttribute("data-item-id");
+        const itemName = button.getAttribute("data-item-name");
+
+        deleteForm.action = `/inventory/${itemId}?_method=DELETE`;
+
+        itemNameSpan.textContent = itemName;
+      });
+    </script>
+  </body>
 </html>

@@ -1,7 +1,7 @@
 import pool from "../config/db";
 
 const createProductsTable = async () => {
-    const queryText = `
+  const queryText = `
         CREATE TABLE IF NOT EXISTS products (
         id SERIAL PRIMARY KEY,
         name VARCHAR(50) NOT NULL,
@@ -10,12 +10,12 @@ const createProductsTable = async () => {
         description VARCHAR(100)
         )`;
 
-        try {
-            await pool.query(queryText);
-            console.log("Products table created if not exists");
-        } catch (error) {
-            console.log("Error creating products table",error)
-        }
+  try {
+    await pool.query(queryText);
+    console.log("Products table created if not exists");
+  } catch (error) {
+    console.log("Error creating products table", error);
+  }
 };
 
 export default createProductsTable;
