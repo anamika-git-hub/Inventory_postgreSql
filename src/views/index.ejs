@@ -26,24 +26,27 @@
             </div>
         </div>
 
-        <!-- Add New Item Button -->
-        <div class="row mb-4">
-            <div class="col-12">
+         <!-- Add New Item Button and Search Bar -->
+        <div class="row mb-4 align-items-center">
+            <div class="col-md-6">
                 <a href="/inventory/new" class="btn btn-dark btn-lg">
                     <i class="bi bi-plus-circle me-2"></i>
                     Add New Item
                 </a>
             </div>
+            <div class="col-md-6">
+                <form method="GET" action="/" class="d-flex justify-content-end">
+                    <div class="input-group" style="max-width: 300px;">
+                        <input type="text" class="form-control" name="search" value="<%= searchQuery %>" placeholder="Search items...">
+                        <button class="btn btn-dark" type="submit">
+                            <i class="bi bi-search"></i>
+                        </button>
+                    </div>
+                </form>
+            </div>
         </div>
 
-          <form method="GET" action="/" class="mb-4">
-            <div class="input-group">
-                <input type="text" class="form-control" name="search" value="<%= searchQuery %>" placeholder="Search inventory items...">
-                <button class="btn btn-dark" type="submit">
-                    <i class="bi bi-search"></i>
-                </button>
-            </div>
-        </form>
+          
 
 
         <!-- Inventory Table -->
@@ -114,16 +117,54 @@
         </div>
 
          <!-- Pagination -->
-          <div class="mt-2">
-            <ul class="pagination justify-content-center">
-                <% for(let i = 1; i <= totalPages; i++) { %>
-                    <li class="page-item <%= currentPage === i ? 'active' : '' %>">
-                        <a class="page-link bg-dark border-dark text-white" href="/?page=<%= i %>&search=<%= searchQuery %>">
-                            <%= i %>
-                        </a>
-                    </li>
-                <% } %>
-            </ul>
+        <div class="row mt-4">
+            <div class="col-12">
+                <nav aria-label="Inventory pagination">
+                    <ul class="pagination justify-content-center">
+                        <% if (currentPage > 1) { %>
+                            <li class="page-item">
+                                <a class="page-link text-dark" href="/?page=<%= currentPage - 1 %>&search=<%= searchQuery %>" aria-label="Previous">
+                                    <i class="bi bi-chevron-left"></i>
+                                </a>
+                            </li>
+                        <% } else { %>
+                            <li class="page-item disabled">
+                                <span class="page-link">
+                                    <i class="bi bi-chevron-left"></i>
+                                </span>
+                            </li>
+                        <% } %>
+                        
+                        <% for(let i = 1; i <= totalPages; i++) { %>
+                            <li class="page-item <%= currentPage === i ? 'active' : '' %>">
+                                <% if (currentPage === i) { %>
+                                    <span class="page-link bg-dark border-dark text-white">
+                                        <%= i %>
+                                    </span>
+                                <% } else { %>
+                                    <a class="page-link text-dark" href="/?page=<%= i %>&search=<%= searchQuery %>">
+                                        <%= i %>
+                                    </a>
+                                <% } %>
+                            </li>
+                        <% } %>
+                        
+                        <% if (currentPage < totalPages) { %>
+                            <li class="page-item">
+                                <a class="page-link text-dark" href="/?page=<%= currentPage + 1 %>&search=<%= searchQuery %>" aria-label="Next">
+                                    <i class="bi bi-chevron-right"></i>
+                                </a>
+                            </li>
+                        <% } else { %>
+                            <li class="page-item disabled">
+                                <span class="page-link">
+                                    <i class="bi bi-chevron-right"></i>
+                                </span>
+                            </li>
+                        <% } %>
+                    </ul>
+                </nav>
+            </div>
         </div>
 
         <!-- Footer -->
